@@ -2,7 +2,7 @@ $:.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'eprun/version'
 
 Gem::Specification.new do |s|
-  s.name     = "eprun"
+  s.name     = "camertron-eprun"
   s.version  = ::Eprun::VERSION
   s.authors  = ["Ayumu Nojima (野島 歩)", "Martin J. Dürst"]
   s.email    = ["duerst@it.aoyama.ac.jp"]
