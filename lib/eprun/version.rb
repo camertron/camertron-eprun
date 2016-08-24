@@ -5,5 +5,5 @@
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
 class Eprun
-  VERSION = "1.1.0"
+  VERSION = "1.1.1"
 end
