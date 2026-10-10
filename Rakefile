@@ -4,37 +4,75 @@
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
-ROOT_DIR = Pathname.new(File.join(File.dirname(__FILE__)))
+ROOT_DIR = Pathname.new(__dir__)
 $:.push(ROOT_DIR.to_s)
 
-require 'eprun/helpers'
-require 'tasks/erb_template'
-require 'tasks/tables_generator'
-
-require 'rubygems/package_task'
+require "eprun"
+require "rubygems/package_task"
 
 task :default => :test
 Bundler::GemHelper.install_tasks
 
 task :test do
-  require 'test/unit'
+  require "test/unit"
+
   files = Dir.glob("./test/test_*.rb")
   runner = Test::Unit::AutoRunner.new(true)
   runner.process_args(files)
-  runner.run
+  succeeded = runner.run
+  exit(succeeded ? 0 : 1)
+end
+
+task :update_data do
+  require "open-uri"
+  require "fileutils"
+
+  files = ["UnicodeData.txt", "NormalizationTest.txt", "CompositionExclusions.txt"]
+
+  Eprun::UCD_VERSIONS.each do |ucd_version_string|
+    base_url = "https://www.unicode.org/Public/#{ucd_version_string}/ucd"
+    ucd_version = Eprun::UcdVersion.get(ucd_version_string)
+
+    files.each do |file|
+      url = "#{base_url}/#{file}"
+      FileUtils.mkdir_p(ucd_version.data_path)
+      File.write(File.join(ucd_version.data_path, file), URI.open(url).read)
+    end
+  end
 end
 
 task :generate_tables do
-  EprunTasks::TablesGenerator.new(
-    ROOT_DIR.join("data").to_s,
-    ROOT_DIR.join("lib", Eprun.require_path).to_s
-  ).generate
+  require "tasks/tables_generator"
+
+  Eprun::UCD_VERSIONS.each do |ucd_version_string|
+    ucd_version = Eprun::UcdVersion.get(ucd_version_string)
+    generator = EprunTasks::TablesGenerator.new(
+      ROOT_DIR.join("data").to_s,
+      ROOT_DIR.join("lib", "eprun").to_s,
+      ucd_version,
+    )
+
+    generator.generate
+  end
 end
 
 task :benchmark do
-  require 'eprun'
-  require ROOT_DIR.join("benchmark/benchmark").to_s
+  require "benchmark/ips"
 
-  Eprun.enable_core_extensions!
-  EprunTasks::Benchmarks.new(ROOT_DIR.join("benchmark".to_s)).run
+  deutsch = File.read(File.join(ROOT_DIR, "benchmark", "Deutsch.txt"))
+  japanese = File.read(File.join(ROOT_DIR, "benchmark", "Japanese.txt"))
+
+  Benchmark.ips do |x|
+    x.report("eprun Deutsch") { Eprun.normalize(deutsch, :nfc) }
+    x.report("ruby Deutsch")  { deutsch.unicode_normalize(:nfc) }
+    x.compare!
+  end
+
+  puts
+
+  Benchmark.ips do |x|
+    x.report("eprun Japanese") { Eprun.normalize(japanese, :nfc) }
+    x.report("ruby Japanese")  { japanese.unicode_normalize(:nfc) }
+    x.compare!
+  end
 end

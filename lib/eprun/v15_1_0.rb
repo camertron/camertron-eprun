@@ -4,17 +4,8 @@
 # available under the same licence as Ruby itself
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
-class String
-  def normalize(form = :nfc)
-    Eprun.normalize(self, form)
-  end
-  
-  def normalize!(form = :nfc)
-    replace(self.normalize(form))
-  end
-  
-  def normalized?(form = :nfc)
-    Eprun.normalized?(self, form)
+module Eprun
+  module V15_1_0
+    autoload :Tables, "eprun/v15_1_0/tables"
   end
 end
-

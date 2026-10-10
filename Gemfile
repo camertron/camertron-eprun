@@ -4,14 +4,10 @@ gemspec
 
 group :development do
   gem "rake"
-  gem "pry-nav"
-  gem 'unicode'
-  gem 'unf'
-  # gem 'unicode_utils'
-  gem 'activesupport'
+  gem "debug"
+  gem "benchmark-ips"
 end
 
 group :test do
-  gem "rspec"
-  gem "rr"
+  gem "test-unit"
 end
