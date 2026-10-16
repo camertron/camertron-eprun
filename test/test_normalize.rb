@@ -58,7 +58,11 @@ class TestNormalize < Test::Unit::TestCase
     end
   end
 
-  Eprun::UCD_VERSIONS.each do |ucd_version|
+  def self.ucd_versions
+    Array(ENV.fetch("UCD_VERSION", Eprun::UCD_VERSIONS))
+  end
+
+  ucd_versions.each do |ucd_version|
     Eprun.with_version(ucd_version) do
       # source; NFC; NFD; NFKC; NFKD
       #
@@ -147,7 +151,7 @@ class TestNormalize < Test::Unit::TestCase
     end
   end
 
-  Eprun::UCD_VERSIONS.each do |ucd_version|
+  ucd_versions.each do |ucd_version|
     Eprun.with_version(ucd_version) do
       generate_test_check_true :NFC, :nfc
       generate_test_check_true :NFD, :nfd

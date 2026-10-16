@@ -126,6 +126,10 @@ module EprunTasks
         kompatible_table[key] = value if expanded
       end
 
+      decomp_all_accents = decomposition_table.filter_map do |key, value|
+        next key if value.all? { |c| combining_classes[c] != 0 }
+      end
+
       loop do
         break unless kompatible_table.any? do |key, value|
           expanded = value.map { |v| kompatible_table[v] || v }.flatten
@@ -141,6 +145,7 @@ module EprunTasks
         kompatible_table: kompatible_table,
         composition_exclusions: composition_exclusions,
         composition_starters: composition_starters,
+        decomp_all_accents: decomp_all_accents,
         hangul_no_trailing: hangul_no_trailing,
         combining_classes: combining_classes,
       }
