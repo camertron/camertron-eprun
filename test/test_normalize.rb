@@ -199,4 +199,24 @@ class TestNormalize < Test::Unit::TestCase
     assert_equal utf8('\u1100\u1161\u0323\u0300'), Eprun.normalize(utf8('\uAC00\u0300\u0323'), :nfd)
     assert_equal utf8('\u1100\u1161\u0323\u0300'), Eprun.normalize(utf8('\u1100\u1161\u0300\u0323'), :nfd)
   end
+
+  def test_combining_sequences_ordered_together
+    # The following example comes from the Unicode collation tests. In this example,
+    # the 0F81 decomposes into 0F71 0F80, which have combining classes of 129 and 130
+    # respectively. The 0591 that comes logically earlier in the codepoint sequence
+    # has a combining class of 220. Because Ruby's NFD normalization algorithm decomposes
+    # subsections of the string rather than the entire string at once, earlier
+    # implementations processed 0FB2 and 0591 in isolation, which generated a string
+    # with combining classes 0 220 129 130 0, which is not the correct canonical order;
+    # 0591 (combining class of 220) should be ordered after 0F80 (combining class of
+    # 130). This test ensures correct ordering is observed for such cases.
+    a = "\u0FB2\u0591\u0F81\u0061"
+    assert_equal("\u0FB2\u0F71\u0F80\u0591\u0061", Eprun.normalize(a, :nfd))
+
+    # This tests that the logic above holds when the sequence starts with a decomposition
+    # starter. 00C0 decomposes to 0041 0300 and 0F81 decomposes to 0F71 0F80, all of
+    # which have combining classes > 0 and must be ordered with 0591.
+    a = "\u00C0\u0591\u0F81"
+    assert_equal("\u0041\u0F71\u0F80\u0591\u0300", Eprun.normalize(a, :nfd))
+  end
 end

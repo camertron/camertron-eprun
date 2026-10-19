@@ -8,15 +8,12 @@ module Eprun
         "[<% each_regexp_chars(attrs[:accent_array]) do |rx| %><%= rx %>" \
         "<% end %>]"
       ACCENTS = accents
-      decomp_all_accents = "" \
-        "[<% each_regexp_chars(attrs[:decomp_all_accents]) do |rx| %><%= rx %>" \
-        "<% end %>]"
       REGEXP_D_STRING = <%# composition starters and composition exclusions %>
         "[<% each_regexp_chars(attrs[:composition_table].values + attrs[:composition_exclusions]) do |rx| %><%= rx %>" \
-        "<% end%>]#{decomp_all_accents}*#{accents}*" \
+        "<% end%>]#{accents}*" \
         "|" \<%# characters that can be the result of a composition, except composition starters %>
         "[<% each_regexp_chars(attrs[:composition_starters] - attrs[:composition_table].values) do |rx| %><%= rx %>" \
-        "<% end %>]?#{accents}+#{decomp_all_accents}*#{accents}*" \
+        "<% end %>]?#{accents}+" \
         "|" \<%# precomposed Hangul syllables %>
         "[\u{AC00}-\u{D7A4}]"
       REGEXP_C_STRING =  <%# composition exclusions %>
