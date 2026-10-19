@@ -10,4 +10,5 @@ end
 
 group :test do
   gem "test-unit"
+  gem "m"
 end
