@@ -17,11 +17,11 @@ module Eprun
 
   class << self
     def current_version
-      Thread.current[:__eprun_current_version__]
+      Fiber[:__eprun_current_version__]
     end
 
     def current_version=(new_version)
-      Thread.current[:__eprun_current_version__] = Eprun::UcdVersion.get(new_version)
+      Fiber[:__eprun_current_version__] = Eprun::UcdVersion.get(new_version)
     end
 
     def normalize(*args)
