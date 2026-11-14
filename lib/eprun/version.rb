@@ -5,7 +5,7 @@
 # (see http://www.ruby-lang.org/en/LICENSE.txt)
 
 module Eprun
-  VERSION = "2.0.0"
+  VERSION = "2.0.1"
   UCD_VERSIONS = [
     "18.0.0",
     "17.0.0",

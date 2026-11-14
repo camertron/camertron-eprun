@@ -1,3 +1,6 @@
+== 2.0.1
+* Fix bug in combining mark regex.
+
 == 2.0.0
 * Removed MRI 1.8 compatibility.
 * Big internal refactor, but same API.

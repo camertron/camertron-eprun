@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    camertron-eprun (2.0.0)
+    camertron-eprun (2.0.1)
 
 GEM
   remote: http://rubygems.org/
@@ -56,7 +56,7 @@ DEPENDENCIES
 CHECKSUMS
   benchmark-ips (2.15.1) sha256=07a1a9f3c6105ecaf68c174fc3fbcddd71a0e9ada6236ae03093a0dcfd812d59
   bundler (4.0.18) sha256=02d9a17429de1847b4e0c9f27a9ee4b20c0a74c0a641b4e77195d6019e3618ac
-  camertron-eprun (2.0.0)
+  camertron-eprun (2.0.1)
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   io-console (0.9.4) sha256=a403304f32928ee85e56d457b4612ca43f2703b561a3258844992bd24085fbb1
